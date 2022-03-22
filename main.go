@@ -66,7 +66,7 @@ func main() {
 		// 判断今日是否打卡
 		jsonObjClock, _ := simplejson.NewJson(contentChock)
 		if jsonObjClock.GetPath("data", "msg").MustString() != "未打卡" {
-			tmpmsg := fmt.Sprintf("%s 今日已打卡!", id)
+			tmpmsg := fmt.Sprintf("%s 今日已打卡!\n", id)
 			msg += tmpmsg
 			continue
 		}
@@ -75,19 +75,24 @@ func main() {
 			// 3. 获取验证码
 			time.Sleep(1 * time.Second)
 			key, code = GetVerify()
+			if key == code {
+				tmpmsg := fmt.Sprintf("%s 今日打卡失败!\n", id)
+				msg += tmpmsg
+				continue
+			}
 			fmt.Println(key, code)
 
 			// 4. 签到
 			intUid, _ := strconv.Atoi(uidstr)
 			ok := CheckIn(intUid, key, code)
 			if ok {
-				tmpmsg := fmt.Sprintf("%s 今日打卡成功!", id)
+				tmpmsg := fmt.Sprintf("%s 今日打卡成功!\n", id)
 				msg += tmpmsg
 				break
 			}
 			time.Sleep(1 * time.Second)
 			if depth == 10 {
-				tmpmsg := fmt.Sprintf("%s 今日打卡失败!", id)
+				tmpmsg := fmt.Sprintf("%s 今日打卡失败!\n", id)
 				msg += tmpmsg
 				break
 			}
@@ -129,7 +134,11 @@ func GetVerify() (string, string) {
 		imgInfo := allResult.Data
 		utils.DecodetoImg(imgInfo.Img)
 		code := api.GetCode()
-		if len(code) == 4 && !strings.Contains(code, " ") {
+		if code == "" {
+			return "", ""
+		}
+		code = strings.Replace(code, " ", "", -1)
+		if len(code) == 4 {
 			return allResult.Data.Key, code
 		}
 		time.Sleep(1 * time.Second)
