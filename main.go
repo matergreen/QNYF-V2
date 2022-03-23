@@ -60,11 +60,17 @@ func main() {
 		fmt.Println(idUidSlice)
 		id, uidstr := idUidSlice[0], idUidSlice[1]
 
+		time.Sleep(3 * time.Second)
 		urlChockIn := fmt.Sprintf(config.CheckIn+"?uid=%s&usertype=1&yxdm=10623", uidstr)
 		contentChock := utils.WapperHttp("GET", urlChockIn, nil)
 
 		// 判断今日是否打卡
 		jsonObjClock, _ := simplejson.NewJson(contentChock)
+		if jsonObjClock.Get("code").MustInt() == 400 {
+			tmpmsg := fmt.Sprintf("%s 用户接口非法访问...\n", id)
+			msg += tmpmsg
+			continue
+		}
 		if jsonObjClock.GetPath("data", "msg").MustString() != "未打卡" {
 			tmpmsg := fmt.Sprintf("%s 今日已打卡!\n", id)
 			msg += tmpmsg

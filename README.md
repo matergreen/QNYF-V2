@@ -47,15 +47,15 @@ V2是在重新梳理 `qnyf打卡` 完整流程后,摒弃了之前使用 `Seleniu
 您可以将此脚本设置成定时任务,以实现自动化定时打卡的效果.这里我以我 `Linux` 为例:
 
 ```shell
-> cd QNYFv2 & go build mian.go
+> cd QNYF-V2 & go build mian.go
 > crontab -e
-> 0 7 * * * cd /home/lighthouse/check/v2/ && ./main
+> 0 7 * * * cd /home/lighthouse/QNYF-V2/ && ./main
 ```
-表示会在每天早点的 `7` 点会自动执行 `/home/lighthouse/check/v2/main`程序
+表示会在每天早点的 `7` 点会自动执行 `cd /home/lighthouse/QNYF-V2/main`程序
 
 ## PlantoDo
 
-- [ ] 增加以 `goroutine` 的形式完成过程.
+- [ ] ~~增加以 `goroutine` 的形式完成过程.~~
 
 - [x] 增加 Web 界面,将程序面向更多的使用者. 2022/3/20
 
@@ -64,3 +64,5 @@ V2是在重新梳理 `qnyf打卡` 完整流程后,摒弃了之前使用 `Seleniu
 ## Log
 
 - [x] 修复了 api 验证码识别导致的资源浪费 bug. 并对 api 返回的 code 进行了一定的误差处理. 2022/3/22
+
+- [x] 修复了接口访问太快导致的接口非法访问请求问题. 2022/3/23
